@@ -1,2 +1,3 @@
-# idp4-application-jwt-demo
-jwt应用插件demo
+Java JWT Demo
+
+- Java  1.8.0_40
