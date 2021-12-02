@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+             xmlns:beans="http://www.springframework.org/schema/beans"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns:mvc="http://www.springframework.org/schema/mvc"
+             xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+
+
+                        http://www.springframework.org/schema/security
+                        http://www.springframework.org/schema/security/spring-security-4.0.xsd   http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd">
+
+    <!--<debug/>-->
+
+    <!--static url pattern-->
+    <http pattern="/static/**" security="none"/>
+    <!--Ignore /test,  /public -->
+    <http pattern="/public/**" security="none"/>
+    <http pattern="/public/api/**" security="none"/>
+    <!-- jwt sso login -->
+    <http pattern="/jwt/**" security="none"/>
+
+
+    <!--<mvc:annotation-driven/>-->
+    <mvc:annotation-driven validator="webGlobalValidator"/>
+    <mvc:default-servlet-handler/>
+
+
+    <beans:bean id="successhandler" class="com.idsmanager.main.web.context.LoginSuccessHandler"/>
+
+    <http use-expressions="false" authentication-manager-ref="authenticationManager">
+        <intercept-url pattern="/oauth/**" access="ROLE_EMM_SERVER,ROLE_TOKEN_AGENT_USER,ROLE_OAUTH_RP"/>
+
+
+        <!--Ignore login-->
+        <intercept-url pattern="/login*" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
+
+
+        <intercept-url pattern="/system*" access="ROLE_SYSTEM_ACCOUNT"/>
+        <intercept-url pattern="/user*" access="ROLE_USER_ACCOUNT"/>
+
+        <intercept-url pattern="/**" access="IS_AUTHENTICATED_FULLY"/>
+
+        <form-login authentication-failure-url="/login?authentication_error=1"
+                    login-page="/login" login-processing-url="/signin"
+                    authentication-success-handler-ref="successhandler"/>
+        <logout logout-success-url="/index" logout-url="/signout" invalidate-session="false"/>
+        <anonymous/>
+        <access-denied-handler error-page="/login?authorization_error=2"/>
+        <csrf disabled="true"/>
+    </http>
+
+
+    <authentication-manager alias="authenticationManager">
+        <authentication-provider user-service-ref="userService">
+            <password-encoder hash="sha-256">
+                <salt-source user-property="username"/>
+            </password-encoder>
+        </authentication-provider>
+    </authentication-manager>
+
+    <!--Support spring security tag on jsp-->
+    <beans:bean class="org.springframework.security.oauth2.provider.expression.OAuth2WebSecurityExpressionHandler"
+                id="securityExpressionHandler"/>
+
+    <beans:bean class="com.idsmanager.main.domain.security.SecurityUtils">
+        <beans:property name="securityHolder">
+            <beans:bean class="com.idsmanager.main.domain.security.SpringSecurityHolder"/>
+        </beans:property>
+    </beans:bean>
+
+
+</beans:beans>
