@@ -17,7 +17,7 @@
 
         <h2 class="page-header">创建用户</h2>
 
-        <form:form commandName="formDto" cssClass="form-horizontal">
+        <form:form modelAttribute="formDto" cssClass="form-horizontal">
 
 
             <div class="form-group">

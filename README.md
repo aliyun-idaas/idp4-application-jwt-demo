@@ -3,23 +3,23 @@ JWT 应用插件 demo
 
 ## 文件清单
 1. jwt-demo.war
-2. jwt.properties
+2. application.properties
 
 
 ## 请按以下步骤操作
 
-### 1. tomcat安装
-将 jwt-demo.war 复制到 TOMCAT webapps 目录
-在tomcat的 shared 目录中添加 jwt.properties 并修改配置
-(主要是jwt.host)
-
+### 1. 前提
+本DEMO环境依赖于JDK 1.8，请先提前安装   
+修改配置文件：application.properties (主要是jwt.host)
 
 ### 2.启动, 初始化账号与登录
 
-启动tomcat, 访问 {host}/jwt-demo/     如: http://localhost:8080/jwt-demo/
+使用java -jar启动程序：
+> java -jar jwt-demo.war
 
-第一次需要初始一个账号, 浏览器访问  {host}/jwt-demo/public/initial_user
+访问 {host}/     如: http://localhost:8080/
 
+第一次需要初始一个账号, 浏览器访问  {host}/public/initial_user
 
 初始账号/密码为: admin/admin@jwtdemo
 然后使用初始账号/密码 登录

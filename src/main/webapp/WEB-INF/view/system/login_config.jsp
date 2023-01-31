@@ -12,22 +12,18 @@
 <%@ taglib tagdir="/WEB-INF/tags" prefix="tags" %>
 <html>
 <head>
-    <title>登录页面设置</title>
+    <title>系统配置</title>
 </head>
 <body>
-
-<div class="row box-header-box">
-    <tags:system_tab active="4"/>
-</div>
 
 <div class="row">
     <div class="col-md-12">
 
-        <h2 class="page-header">登录页面设置</h2>
+        <h2 class="page-header">系统配置</h2>
         <div class="alert alert-info">
             此处配置用于登录页面的配置
         </div>
-        <form:form commandName="formDto" cssClass="form-horizontal">
+        <form:form modelAttribute="formDto" cssClass="form-horizontal">
 
             <div class="form-group">
                 <label class="control-label col-sm-2">标题<em class="text-danger">*</em></label>
@@ -41,23 +37,33 @@
             </div>
 
             <div class="form-group">
-                <label class="control-label col-sm-2">配色方案<em class="text-danger">*</em></label>
+                <label class="col-sm-2 control-label">全局退出登录</label>
+
                 <div class="col-sm-9">
-                    <form:select path="themeId" cssClass="form-control" required="true">
-                        <form:options items="${themes}"/>
-                    </form:select>
-                    <a href="login/theme/create" class="btn btn-sm btn-success"><em class="glyphicon glyphicon-plus-sign"></em> 新建配色方案置</a>
-                    <%--<form:input path="loginTheme" cssClass="form-control" required="true"--%>
-                                <%--placeholder="Login JWT DEMO"/>--%>
-                    <%--<form:errors path="loginTheme" cssClass="label label-warning"/>--%>
-                    <p class="help-block">开启SCIM同步后，会自动同步账户</p>
+                    <form:textarea path="spLogoutUrl" cssClass="form-control"
+                                   placeholder="http://..."/>
+                    <form:errors path="spLogoutUrl" cssClass="label label-warning"/>
+                    <p class="help-block">在当前系统(SP)进行SSO成功后, SP应用中若需要全局退出时,可调用SP提供的退出URL进行全局,配置后可在右上角显示"全局退出". 如:
+                        http://xxx.com/public/sp/logout/szjwt</p>
                 </div>
             </div>
 
             <div class="form-group">
+                <label class="col-sm-2 control-label">SP SSO 地址</label>
+
+                <div class="col-sm-9">
+                    <form:textarea path="spSSoUrl" cssClass="form-control"
+                                   placeholder="http://..."/>
+                    <form:errors path="spSSoUrl" cssClass="label label-warning"/>
+                    <p class="help-block">
+                        如果你配置了使用SP发起SSO流程,那么请输入在IDP注册JWT应用后生成的地址,如:https://xxx.com/public/sp/sso/internetjwt1,在下次登录时可选择去IDP认证并SSO.</p>
+                </div>
+            </div>
+            <div class="form-group">
                 <div class="col-sm-2"></div>
                 <div class="col-sm-10">
-                    <button type="submit" class="btn btn-primary"><em class="glyphicon glyphicon-ok"></em> 保存设置</button>
+                    <button type="submit" class="btn btn-primary"><em class="glyphicon glyphicon-ok"></em> 保存设置
+                    </button>
                     <c:if test="${'saveOK' eq param.alert}"><span
                             class="label label-success">保存设置完成</span></c:if>
                 </div>

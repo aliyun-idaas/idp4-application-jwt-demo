@@ -1,0 +1,83 @@
+package com.idsmanager.demo.jwt.service.dto;
+
+/**
+ * 15-5-18
+ * <p/>
+ * {"access_token":"d580fbfe-da2c-4840-8b66-848168ad8d62","token_type":"bearer","refresh_token":"9406e12f-d62e-42bd-ad40-0206d94ae776","expires_in":43199,"scope":"read write"}
+ *
+ * @author Shengzhao Li
+ */
+public class AccessTokenDto extends AbstractOauthDto {
+
+    private static final long serialVersionUID = -177981438727987420L;
+    private String accessToken;
+    private String tokenType;
+    private String refreshToken;
+    private String scope;
+
+    private int expiresIn;
+
+
+    public AccessTokenDto() {
+    }
+
+    public AccessTokenDto(String error, String errorDescription) {
+        this.error = error;
+        this.errorDescription = errorDescription;
+    }
+
+
+    public int getExpiresIn() {
+        return expiresIn;
+    }
+
+    public void setExpiresIn(int expiresIn) {
+        this.expiresIn = expiresIn;
+    }
+
+    public String getAccessToken() {
+        return accessToken;
+    }
+
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
+    }
+
+    public String getTokenType() {
+        return tokenType;
+    }
+
+    public void setTokenType(String tokenType) {
+        this.tokenType = tokenType;
+    }
+
+    public String getRefreshToken() {
+        return refreshToken;
+    }
+
+    public void setRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
+    }
+
+
+    public String getScope() {
+        return scope;
+    }
+
+    public void setScope(String scope) {
+        this.scope = scope;
+    }
+
+    @Override
+    public String toString() {
+        String sb = "{accessToken='" + accessToken + '\'' +
+                ", tokenType='" + tokenType + '\'' +
+                ", refreshToken='" + refreshToken + '\'' +
+                ", scope='" + scope + '\'' +
+                ", expiresIn=" + expiresIn +
+                ", errorDescription='" + errorDescription + '\'' +
+                ", error='" + error + '\'' +
+                '}';
+        return sb;
+    }
+}

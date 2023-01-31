@@ -13,7 +13,7 @@
 
         <h2 class="page-header">Update SSO Config</h2>
 
-        <form:form commandName="formDto" cssClass="form-horizontal">
+        <form:form modelAttribute="formDto" cssClass="form-horizontal">
 
             <input type="hidden" name="ssoUrlId" value="${formDto.ssoUrlId}"/>
             <input type="hidden" name="ssoUrl" value="${formDto.ssoUrl}"/>
