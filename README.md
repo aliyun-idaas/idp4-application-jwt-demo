@@ -2,7 +2,7 @@
 JWT 应用插件 demo
 
 ## 文件清单
-1. jwt-demo.war
+1. idp4-application-jwt-demo.war
 2. application.properties
 
 
@@ -15,7 +15,7 @@ JWT 应用插件 demo
 ### 2.启动, 初始化账号与登录
 
 使用java -jar启动程序：
-> java -jar jwt-demo.war
+> java -jar idp4-application-jwt-demo.war
 
 访问 {host}/     如: http://localhost:8080/
 

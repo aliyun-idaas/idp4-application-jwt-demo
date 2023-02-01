@@ -3,7 +3,7 @@
     <Properties>
         <!-- 注意： 此处配置的内容不能换行-->
         <!--<Property name="LOG_PATH">${sys:catalina.home}/logs/</Property>-->
-        <Property name="LOG_PATH">../logs/</Property>
+        <Property name="LOG_PATH">logs/</Property>
         <Property name="PID">????</Property>
         <Property name="LOG_EXCEPTION_CONVERSION_WORD">%xwEx</Property>
         <Property name="LOG_LEVEL_PATTERN">%5p</Property>
@@ -18,8 +18,8 @@
         </Console>
 
         <!-- 请根据项目需要修改配置 -->
-        <RollingFile name="defaultAppender" fileName="${LOG_PATH}/Boot-Template.log"
-                     filePattern="${LOG_PATH}/Boot-Template_%d{yyyy-MM-dd}-%i.log.gz">
+        <RollingFile name="defaultAppender" fileName="${LOG_PATH}/jwt-demo.log"
+                     filePattern="${LOG_PATH}/jwt-demo-%d{yyyy-MM-dd}-%i.log.gz">
             <Filters>
                 <ThresholdFilter level="DEBUG"/>
                 <ThresholdFilter level="ERROR" onMatch="DENY" onMismatch="NEUTRAL"/>
@@ -39,7 +39,7 @@
         <Logger name="org.hibernate" level="INFO"/>
 
         <!-- logger -->
-        <Logger name="com.idsmanager.boot.template" level="DEBUG" additivity="true">
+        <Logger name="com.idsmanager.demo.jwt" level="DEBUG" additivity="true">
             <AppenderRef ref="defaultAppender"/>
         </Logger>
 
