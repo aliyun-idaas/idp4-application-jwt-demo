@@ -219,7 +219,7 @@
                         <addMavenDescriptor>false</addMavenDescriptor>
                         <manifestEntries>
                             <Implementation-BuildNumber>${project.version}</Implementation-BuildNumber>
-                            <Implementation-Title>IDsManager-Boot</Implementation-Title>
+                            <Implementation-Title>${project.artifactId}</Implementation-Title>
                             <Building-Time>${maven.build.timestamp}</Building-Time>
                             <Implementation-Version>${project.version}</Implementation-Version>
                             <Implementation-URL>https://idsmanager.com</Implementation-URL>
