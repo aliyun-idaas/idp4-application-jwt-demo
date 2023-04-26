@@ -91,23 +91,32 @@ public class SSOController {
             model.addAttribute("error", "Retrieve Username error: id_token expired");
             return "error";
         }
-        String username = claims.getSubject();
+        //5. 注意校验id_token是否已经登陆过，防重放攻击
+        //业务系统自己实现，需要校验有效期内，是否有相同的id_token已经登录
+        final String jti = claims.getJwtId();//获取token唯一标识
+        //从自身缓存系统判断jti是否已经登录过
+        //if(exit(jti)){
+        //    model.addAttribute("error", "id_token verifySignature failed");
+        //    return error;
+        //}
+        //save(jti);
 
-        //4.获取到用户信息，检测用户名是否存在自己的业务系统中，isExistedUsername方法为示例实现
+        //6.获取到用户信息，检测用户名是否存在自己的业务系统中，isExistedUsername方法为示例实现
+        String username = claims.getSubject();
         if (userService.isExistedUsername(username)) {
-            //5.如果存在,登录成功，返回登录成功后的界面
+            //7.如果存在,登录成功，返回登录成功后的界面
             User sysUser = userService.updateLoginTimes(username);
             HttpSession session = request.getSession();
             session.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, saveSecurity(sysUser));
 
-            //6.如果注册应用时添加了target_url，那么返回此自定义url页面
+            //8.如果注册应用时添加了target_url，那么返回此自定义url页面
             if (StringUtils.isNotEmpty(target_url)) {
                 return "redirect:" + target_url;
             }
-            //7.否则返回系统默认操作页面
+            //9.否则返回系统默认操作页面
             return "redirect:../../index";
         } else {
-            //8.如果不存在,返回登录失败页面,提示用户不存在
+            //10.如果不存在,返回登录失败页面,提示用户不存在
             model.addAttribute("error", "username { " + username + " } not exist");
             return "error";
         }
