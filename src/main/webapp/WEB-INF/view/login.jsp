@@ -137,9 +137,9 @@
                                     <%--<em class="glyphicon glyphicon-log-in"></em>--%>
                                     登录
                                 </button>
-                                <c:if test="${null != spLoginDto}">
-                                    <c:if test="${null != spLoginDto.spLoginUrl}">
-                                        <a class="link" style="float:right; margin-top:.5em; color:#092B76;" href="${spLoginDto.spLoginUrl}" target="_blank" id="IdpLoginButton">去IDP登录并SSO</a>
+                                <c:if test="${null != systemConfig}">
+                                    <c:if test="${null != systemConfig.spSsoUrl}">
+                                        <a class="link" style="float:right; margin-top:.5em; color:#092B76;" href="${systemConfig.spSsoUrl}" target="_blank" id="IdpLoginButton">去IDP登录并SSO</a>
                                     </c:if>
                                 </c:if>
                                 &nbsp;
