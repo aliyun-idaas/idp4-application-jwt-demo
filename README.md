@@ -1,6 +1,9 @@
 # idp4-application-jwt-demo
 JWT 应用插件 demo
 
+当前分支使用框架：[jjwt](https://github.com/jwtk/jjwt?tab=readme-ov-file#example-jws-hs) 来解析jwt token
+
+
 ## 文件清单
 1. idp4-application-jwt-demo.war
 2. application.properties

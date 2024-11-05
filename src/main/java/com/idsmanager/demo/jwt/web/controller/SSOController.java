@@ -5,11 +5,12 @@ import com.idsmanager.demo.jwt.domain.security.User;
 import com.idsmanager.demo.jwt.service.SSOConfigService;
 import com.idsmanager.demo.jwt.service.UserService;
 import com.idsmanager.demo.jwt.service.dto.sso.SSOConfigDto;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Jwks;
+import io.jsonwebtoken.security.RsaPublicJwk;
+import io.jsonwebtoken.security.SignatureException;
 import org.apache.commons.lang.StringUtils;
-import org.jose4j.jwk.JsonWebKey;
-import org.jose4j.jws.JsonWebSignature;
-import org.jose4j.jwt.JwtClaims;
-import org.jose4j.jwt.NumericDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.security.interfaces.RSAPublicKey;
+import java.util.Date;
 
 /**
  * @author feng
@@ -56,6 +59,7 @@ public class SSOController {
             return "error";
         }
         try {
+
             return checkAndGetUsername(id_token, target_url, model, request, config.getPublicKey());
         } catch (Exception e) {
             LOG.warn("id_token verifySignature failed", e);
@@ -66,34 +70,35 @@ public class SSOController {
 
 
     private String checkAndGetUsername(String id_token, String target_url, Model model, HttpServletRequest request, String publickey) throws Exception {
-
         //1. 初始化
-        JsonWebSignature jws = new JsonWebSignature();
-        jws.setCompactSerialization(id_token);
-        jws.setKey(JsonWebKey.Factory.newJwk(publickey).getKey());
+        final RsaPublicJwk key = (RsaPublicJwk) Jwks.parser().build().parse(publickey);
+        final RSAPublicKey rsaPublicKey = key.toKey();
         //2. 校验id_token是否合法
-        final boolean verifySignature = jws.verifySignature();
-        if (!verifySignature) {
-            LOG.warn("id_token verifySignature failed");
+        Claims claims ;
+        try {
+            claims= Jwts.parser()
+                    .verifyWith(rsaPublicKey)
+                    .build()
+                    .parseSignedClaims(id_token)
+                    .getPayload();
+        }catch (SignatureException e){
+            LOG.warn("id_token verifySignature failed",e);
             //校验失败，报错，返回
             model.addAttribute("error", "Retrieve Username error: id_token verifySignature failed");
             return "error";
         }
-        //3. 获取jwt中的payload信息，json格式，这里可以自由转换为需要的实体类
-        final String payload = jws.getPayload();
 
-        //4. 校验id_token是否过期
-        JwtClaims claims = JwtClaims.parse(payload);
-        NumericDate expirationTime = claims.getExpirationTime();
-        if (expirationTime != null && expirationTime.isBefore(NumericDate.now())) {
+        //3. 校验id_token是否过期
+        Date expirationTime = claims.getExpiration();
+        if (expirationTime != null && expirationTime.before(new Date())) {
             LOG.warn("id_token expired");
             //校验失败，报错，返回
             model.addAttribute("error", "Retrieve Username error: id_token expired");
             return "error";
         }
-        //5. 注意校验id_token是否已经登陆过，防重放攻击
+        //4. 注意校验id_token是否已经登陆过，防重放攻击
         //业务系统自己实现，需要校验有效期内，是否有相同的id_token已经登录
-        final String jti = claims.getJwtId();//获取token唯一标识
+        final String jti = claims.getId();//获取token唯一标识
         //从自身缓存系统判断jti是否已经登录过
         //if(exit(jti)){
         //    model.addAttribute("error", "id_token verifySignature failed");
@@ -101,7 +106,7 @@ public class SSOController {
         //}
         //save(jti);
 
-        //6.获取到用户信息，检测用户名是否存在自己的业务系统中，isExistedUsername方法为示例实现
+        //5.获取到用户信息，检测用户名是否存在自己的业务系统中，isExistedUsername方法为示例实现
         String username = claims.getSubject();
         if (userService.isExistedUsername(username)) {
             //7.如果存在,登录成功，返回登录成功后的界面
